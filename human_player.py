@@ -1,7 +1,6 @@
 import abc
-
-
-class HumanPlayer(...):
+from ConnectNGame.src.player import Player
+class HumanPlayer(Player):
     #creates human player instances
     def __init__(self, name: str, piece: str, player_number: int):
         self.name: str = name
