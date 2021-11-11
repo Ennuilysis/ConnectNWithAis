@@ -1,23 +1,23 @@
 from ConnectNGame.src.player import Player
-
+import abc
 class RandomAi(Player):
     VISIBLE_CHARACTERS = [chr(i) for i in range(ord('!'), ord('~') + 1)]
-    def __init__(self, player_number: int):
+    def __init__(self, player_number: int, players):
         self.name: str = "RandomAI "+str(player_number)
-        self.piece: str = piece
-        self.player_num: str = player_number
-
-    def create_player(self, player_num) -> Player:
-        self.check_name_and_piece_human(player_num)
-        self.players.append((player_name, player_piece, player_num))
-        globals()[player_name] = HumanPlayer(player_name, player_piece, player_num)
-        self.Player_instants.append(globals()[player_name])
+        self.piece: str = None
+        self.player_num: int = player_number
+        self.check_piece(players)
 
     @abc.abstractmethod
-    def check_name_and_piece_human(self, player_num: int) -> tuple[str, str]:
-        x = [t[0] for t in self.players]
+    def create_player(self, player_num, player_list) -> RandomAi:
+        globals()[self.name] = RandomAi(player_num, player_list)
+        return (globals()[self.name])
+
+
+    def check_piece(self, player_num: int) -> tuple[str, str]:
+        x = [t[0] for t in player_list]
         x = [t.lower() for t in x]
-        y = [t[1] for t in self.players]
+        y = [t[1] for t in player_list]
         while True:
             player_name = input(f"Player {player_num} enter your name: ")
             player_name_lower = player_name.lower()
