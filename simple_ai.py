@@ -1,8 +1,6 @@
 import random
-
-from ConnectNGame.src.players.human_player import HumanPlayer
-
-class SimpleAI(HumanPlayer):
+from ConnectNGame.src.player import Player
+class SimpleAI(Player):
     def __init__(self, player_number: int):
         VISIBLE_CHARACTERS = [chr(i) for i in range(ord('!'), ord('~') + 1)]
         self.name: str = "SimpleAI "+str(player_number)
