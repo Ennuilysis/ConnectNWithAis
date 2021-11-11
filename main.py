@@ -1,6 +1,6 @@
 from ConnectNGame.src.game import Game
 from ConnectNGame.src.config import Config
-import sys
+import sys, random
 
 
 def main() -> None:
