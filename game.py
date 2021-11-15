@@ -4,10 +4,11 @@ from ConnectNGame.src.players.simple_ai import SimpleAI
 from ConnectNGame.src.players.random_ai import RandomAi
 from ConnectNGame.src.config import Config
 from typing import List, Tuple, Union
+import random
 
 
 class Game(object):
-        def __init__(self, game_config: Config):
+    def __init__(self, game_config: Config):
         self.players: List[Tuple[str, str, int]] = [] #name, piece, number
         self.board: Board = Board.build_board_from_config(game_config)
         self.Player_instants: List[Union[HumanPlayer, SimpleAI, RandomAi]] = []
@@ -18,13 +19,12 @@ class Game(object):
             self.player_num += 1
             type_choice = input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:")
             type_choices = {"Random": RandomAi, "Human": HumanPlayer,"Simple": SimpleAI}
-            self.Player_instants.append(type_choices[type_choice].create_player(self.player_num,self.players))
+            self.Player_instants.append(type_choices[type_choice].create_player(self.player_num,self.players,self.board))
             x=self.Player_instants[-1]
             self.players.append(x.name,x.piece,x.player_num)
             type_choice = input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:")
             self.Player_instants.append(type_choices[type_choice].create_player(self.player_num,self.players))
             self.players.append(x.name,x.piece,x.player_num)
-
             print(self.board)
             while True:
                 for x in self.Player_instants:
@@ -41,6 +41,8 @@ class Game(object):
                     if self.board.is_full():
                         print("Tie Game.")
                         quit()
+
+
 
     def win_check(self, piece, name) -> bool:
         board_list: List[List[str]] = self.board.contents
@@ -77,22 +79,3 @@ class Game(object):
             quit()
 
         return False
-
-    def _play_check(self, player) -> Union[str]:
-        col = self.board.num_columns
-        while True:
-            try:
-                pos = input(f"{player}, please enter the column you want to play in: ")
-                pos = int(pos)
-            except:
-                print(f'{player}, column needs to be an integer. {pos} is not an integer. ')  # type: ignore
-                continue
-            if pos > col - 1 or pos < 0:
-                print(f'Your column needs to be between 0 and {col - 1} but is actually {pos}.')  # type: ignore
-                continue
-            x: List[str] = [t[pos] for t in self.board.contents]
-            if self.board.blank_character not in x:
-                print(f'You cannot play in {pos} because it is full.')
-                continue
-            break
-        return pos
