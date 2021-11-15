@@ -1,15 +1,24 @@
 import abc
 from ConnectNGame.src.player import Player
+from ConnectNGame.src.board import Board
+
+from typing import List, Union
 class HumanPlayer(Player):
     #creates human player instances
 
+    def __init__(self, player_number: int,players, board: Board):
+        self.name=None
+        self.piece=None
+        self.player_num=player_number
+        self.check_name_and_piece(player_number, players,board)
+
     @abc.abstractmethod
-    def create_player(self, player_num, player_list) -> Player:
-        globals()[self.name] = Player(player_num, player_list)
+    def create_player(self, player_num, player_list,board) -> Player:
+        globals()[self.name] = Player(player_num, player_list,board)
         return (globals()[self.name])
 
     @abc.abstractmethod
-    def check_name_and_piece(self, player_num: int, player_list) -> tuple[str, str]:
+    def check_name_and_piece(self, player_num: int, player_list) -> None:
         x = [t[0] for t in player_list]
         x = [t.lower() for t in x]
         y = [t[1] for t in player_list]
@@ -40,3 +49,22 @@ class HumanPlayer(Player):
                 print(f'You cannot use {piece} for your piece as {self.players[pos][0]} is already using it.')
             self.name = player_name
             self.piece = piece
+
+    def play(self, player,board) -> Union[str]:
+        col = self.board.num_columns
+        while True:
+            try:
+                pos = input(f"{player}, please enter the column you want to play in: ")
+                pos = int(pos)
+            except:
+                print(f'{player}, column needs to be an integer. {pos} is not an integer. ')  # type: ignore
+                continue
+            if pos > col - 1 or pos < 0:
+                print(f'Your column needs to be between 0 and {col - 1} but is actually {pos}.')  # type: ignore
+                continue
+            x: List[str] = [t[pos] for t in board.contents]
+            if self.board.blank_character not in x:
+                print(f'You cannot play in {pos} because it is full.')
+                continue
+            break
+        return pos
