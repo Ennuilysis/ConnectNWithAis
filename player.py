@@ -2,10 +2,7 @@
 import abc
 
 class Player(object):
-    self.name: str
-    self.piece: str
-    self.player_num: int
-
+    @abc.abstractmethod
     def __init__(self, player_number: int,players):
         self.name=None
         self.piece=None
@@ -19,4 +16,7 @@ class Player(object):
 
     @abc.abstractmethod
     def check_name_and_piece(self, player_num: int,player_list) -> tuple[str, str]:
+        ...
+    @abc.abstractmethod
+    def play (self,board):
         ...
