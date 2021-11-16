@@ -14,25 +14,33 @@ class Game(object):
         self.board: Board = Board.build_board_from_config(game_config)
         self.Player_instants: List[Union[HumanPlayer, SimpleAI, RandomAi]] = []
         self.player_num = 0
+    
+    def check_type(self, P_type:str)->str:
+        thang=['human','random_ai','simple_ai']
+        thangy=[]
+        P_type=P_type.strip().lower()
+        ting=len(P_type)
+        for x in thang:
+            thangy.append(x[0:ting])
+        return thang[thangy.index(P_type)]
 
     def play(self):
         while True:
             self.player_num += 1
-            type_choice = input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:")
-            type_choices = {"Random": RandomAi, "Human": HumanPlayer, "Simple": SimpleAI}
-            self.Player_instants.append(
-                type_choices[type_choice].create_player(self.player_num, self.players, self.board))
+            type_choice = self.check_type(input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:"))
+            #print(type_choice)
+            type_choices = {"random": RandomAi, "human": HumanPlayer, "simple": SimpleAI}
+            self.Player_instants.append(type_choices[type_choice].create_player(player_num=self.player_num, players=self.players, board=self.board))
             x = self.Player_instants[-1]
             self.players.append((x.name, x.piece, x.player_num))
-            type_choice = input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:")
-            self.Player_instants.append(
-                type_choices[type_choice].create_player(self.player_num, self.players, self.board))
+            type_choice = self.check_type(input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:"))
+            self.Player_instants.append(type_choices[type_choice].create_player(player_num=self.player_num, players=self.players, board=self.board))
             self.players.append((x.name, x.piece, x.player_num))
             print(self.board)
             while True:
                 for x in self.Player_instants:
                     if type(x) == HumanPlayer:
-                        play_col: int = self.play_check(x.name)  # type: ignore
+                        play_col: int = x.play(self.board)  # type: ignore
                     else:
                         play_col = x.play(self.board)
                     self.board.drop_piece_into_column(play_col, x.piece)
