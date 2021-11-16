@@ -8,16 +8,17 @@ from typing import List, Tuple
 class HumanPlayer(Player):
     # creates human player instances
 
-    def __init__(self, player_number: int, players, board: Board):
+     def __init__(self, player_number: int, players, board: Board):
         self.name = None
         self.piece = None
         self.player_num = player_number
         self.check_name_and_piece(player_number, players, board)
+        return
 
-    @abc.abstractmethod
-    def create_player(self, player_num, players, board) -> Player:
-        globals()[self.name] = Player(player_num, players, board)
-        return (globals()[self.name])
+    @staticmethod
+    def create_player(player_num, players, board) -> Player:
+        globals()["HumanPlayer "+str(player_num)] = HumanPlayer(player_num, players, board)
+        return (globals()["HumanPlayer "+str(player_num)])
 
     @abc.abstractmethod
     def check_name_and_piece(self, player_num: int, players, board: Board) -> None:
@@ -49,8 +50,11 @@ class HumanPlayer(Player):
             elif piece in y:
                 pos = y.index(piece)
                 print(f'You cannot use {piece} for your piece as {players[pos][0]} is already using it.')
-            self.name = player_name
-            self.piece = piece
+                continue
+            else:
+                break
+        self.name = player_name
+        self.piece = piece
 
     def play(self, board: Board) -> int:
         col = board.num_columns
