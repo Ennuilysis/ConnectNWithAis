@@ -19,11 +19,11 @@ class Game(object):
     def check_type(self) -> str:
         while True:
             print(f"Choose the type for Player {self.player_num}")
-            P_type = input(f"Enter Human or Random or Simple:")
+            P_type = input(f"Enter Human or Random or Simple: ")
             thang = ['human', 'random', 'simple']
             thangy = []
             try:
-                P_type = P_type.replace(" ", "").lower()
+                P_type = P_type.strip().lower()
                 if P_type == "":
                     raise TypeError
             except:  # type: ignore
@@ -40,22 +40,19 @@ class Game(object):
             # print(thang[thangy.index(P_type)])
             return thang[thangy.index(P_type)]
 
-    def play(self):
+    def play(self)->None:
         while True:
             self.player_num += 1
-            type_choice = self.check_type()
+            type_choice:str = self.check_type()
             # print(type_choice)
             type_choices = {"random": RandomAi, "human": HumanPlayer, "simple": SimpleAI}
             self.Player_instants.append(
-                type_choices[type_choice].create_player(player_num=self.player_num, players=self.players,
-                                                        board=self.board))
+                type_choices[type_choice].create_player(player_num =self.player_num, players=self.players,board=self.board))
             x = self.Player_instants[-1]
             self.players.append((x.name, x.piece, x.player_num))
             self.player_num += 1
             type_choice = self.check_type()
-            self.Player_instants.append(
-                type_choices[type_choice].create_player(player_num=self.player_num, players=self.players,
-                                                        board=self.board))
+            self.Player_instants.append(type_choices[type_choice].create_player(player_num=self.player_num, players=self.players,board=self.board))
             x = self.Player_instants[-1]
             self.players.append((x.name, x.piece, x.player_num))
             print(self.board)
@@ -64,10 +61,10 @@ class Game(object):
                     if type(x) == HumanPlayer:
                         play_col: int = x.play(self.board)  # type: ignore
                     else:
-                        play_col = x.play(self.board)
+                        play_col: int = x.play(self.board)
                     self.board.drop_piece_into_column(play_col, x.piece)
                     print(self.board)
-                    win = self.win_check(x.piece, x.name)
+                    win: bool = self.win_check(x.piece, x.name)
                     if win:
                         print(f"{x.name} won the game!")
                         quit()
@@ -110,4 +107,3 @@ class Game(object):
             quit()
 
         return False
-
