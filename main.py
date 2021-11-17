@@ -4,8 +4,8 @@ import sys, random
 
 
 def main() -> None:
-        try:
-        random.seed(sys.argv[2])
+    try:
+        random.seed(int(sys.argv[2]))
     except IndexError:
         pass
     game_config = Config(sys.argv[1])
