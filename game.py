@@ -1,8 +1,9 @@
 from ConnectNGame.src.board import Board
 from ConnectNGame.src.player import Player
 from ConnectNGame.src.players.human_player import HumanPlayer
-from ConnectNGame.src.players.simple_ai import SimpleAI
 from ConnectNGame.src.players.random_ai import RandomAi
+from ConnectNGame.src.players.simple_ai import SimpleAI
+
 from ConnectNGame.src.config import Config
 from typing import List, Tuple, Union
 import random
@@ -14,27 +15,48 @@ class Game(object):
         self.board: Board = Board.build_board_from_config(game_config)
         self.Player_instants: List[Union[HumanPlayer, SimpleAI, RandomAi]] = []
         self.player_num = 0
-    
-    def check_type(self, P_type:str)->str:
-        thang=['human','random_ai','simple_ai']
-        thangy=[]
-        P_type=P_type.strip().lower()
-        ting=len(P_type)
-        for x in thang:
-            thangy.append(x[0:ting])
-        return thang[thangy.index(P_type)]
+
+    def check_type(self) -> str:
+        while True:
+            print(f"Choose the type for Player {self.player_num}")
+            P_type = input(f"Enter Human or Random or Simple:")
+            thang = ['human', 'random', 'simple']
+            thangy = []
+            try:
+                P_type = P_type.replace(" ", "").lower()
+                if P_type == "":
+                    raise TypeError
+            except:  # type: ignore
+                print(f'{P_type} is not one of Human or Random or Simple. Please try again.')
+                continue
+            ting = len(P_type)
+            for x in thang:
+                thangy.append(x[0:ting])
+            try:
+                thangy.index(P_type)
+            except:  # type: ignore
+                print(f'{P_type} is not one of Human or Random or Simple. Please try again.')
+                continue
+            # print(thang[thangy.index(P_type)])
+            return thang[thangy.index(P_type)]
 
     def play(self):
         while True:
             self.player_num += 1
-            type_choice = self.check_type(input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:"))
-            #print(type_choice)
+            type_choice = self.check_type()
+            # print(type_choice)
             type_choices = {"random": RandomAi, "human": HumanPlayer, "simple": SimpleAI}
-            self.Player_instants.append(type_choices[type_choice].create_player(player_num=self.player_num, players=self.players, board=self.board))
+            self.Player_instants.append(
+                type_choices[type_choice].create_player(player_num=self.player_num, players=self.players,
+                                                        board=self.board))
             x = self.Player_instants[-1]
             self.players.append((x.name, x.piece, x.player_num))
-            type_choice = self.check_type(input(f"Choose the type for Player {self.player_num}\rEnter Human or Random or Simple:"))
-            self.Player_instants.append(type_choices[type_choice].create_player(player_num=self.player_num, players=self.players, board=self.board))
+            self.player_num += 1
+            type_choice = self.check_type()
+            self.Player_instants.append(
+                type_choices[type_choice].create_player(player_num=self.player_num, players=self.players,
+                                                        board=self.board))
+            x = self.Player_instants[-1]
             self.players.append((x.name, x.piece, x.player_num))
             print(self.board)
             while True:
@@ -88,3 +110,4 @@ class Game(object):
             quit()
 
         return False
+
