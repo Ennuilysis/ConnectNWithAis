@@ -40,3 +40,4 @@ class RandomAi(Player):
     @abc.abstractmethod
     def check_name_and_piece(self, player_num: int, players: List[Tuple[str, str, int]], board: Board) -> Tuple[str, str]:
         ...
+
