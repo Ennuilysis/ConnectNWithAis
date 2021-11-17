@@ -4,17 +4,21 @@ from abc import ABC
 from ConnectNGame.src.players import player
 from ConnectNGame.src.players.random_ai import RandomAi
 from ConnectNGame.src.board import Board
-from ConnectNGame.src.game import Game
 from typing import Tuple, List
 import random
 
 
 class SimpleAI(RandomAi):
+    def __init__(self, player_num: int, players: List[Tuple[str, str, str]], board: Board):  # type: ignore
+        super().__init__(player_num, players, board)
+        self.name: str = "SimpleAi " + str(player_num)
+        self.piece: str = self.check_piece(players, board)
+        self.player_num: int = player_num
     # inherits the init and check piece definition from RandomAI
     @staticmethod
-    def create_player(player_number: int, players, board: Board, piece: str) -> RandomAi:
-        name = "SimpleAI " + str(player_number)
-        globals()[name] = SimpleAI(player_number, players, board)
+    def create_player(player_num: int, players, board: Board) -> RandomAi:
+        name = "SimpleAI " + str(player_num)
+        globals()[name] = SimpleAI(player_num, players, board)
         # noinspection PyRedundantParentheses
         return (globals()[name])
 #Where is the list of all players updated?
@@ -58,7 +62,7 @@ class SimpleAI(RandomAi):
             return True
 
     # chooses the piece the same way as Random Ai
-    def play(self, opponent: player, board):
+    def play(self, board):
         col = board.num_columns
         for column in range(col):
             board.drop_piece_into_column(column, self.piece)
@@ -92,7 +96,7 @@ class SimpleAI(RandomAi):
 
 
 
-`
+
 
 
 
@@ -108,6 +112,21 @@ class SimpleAI(RandomAi):
 
 
         # if the top two conditions aren't met then the AI will play at the spot the same way that random AI does
+
+
+
+
+
+#bob = SimpleAI()
+#bob.check_piece()
+
+# if there is a spot to win the simple ai will play there.
+# otherwise if there is a spot to block the opponent from winning the ai will play there
+# if the top two conditions aren't met then the AI will play at the spot the same way that random AI does
+#
+
+
+
 
 
 
