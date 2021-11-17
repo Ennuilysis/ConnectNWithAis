@@ -1,4 +1,4 @@
-from ConnectNGame.src.player import Player
+from ConnectNGame.src.players.player import Player
 from ConnectNGame.src.board import Board
 from typing import List, Tuple
 import random, abc  # type: ignore
@@ -40,4 +40,3 @@ class RandomAi(Player):
     @abc.abstractmethod
     def check_name_and_piece(self, player_num: int, players: List[Tuple[str, str, int]], board: Board) -> Tuple[str, str]:
         ...
-
