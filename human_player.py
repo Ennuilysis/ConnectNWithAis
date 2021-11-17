@@ -20,7 +20,7 @@ class HumanPlayer(Player):
         return (globals()["HumanPlayer " + str(player_num)])
 
     @abc.abstractmethod
-    def check_name_and_piece(self, player_num: int, players, board: Board) -> None:
+    def check_name_and_piece(self, player_num: int, players: List[Tuple[str, str, int]], board: Board) -> None:
         x = [t[0] for t in players]
         x = [t.lower() for t in x]
         y = [t[1] for t in players]
@@ -36,8 +36,8 @@ class HumanPlayer(Player):
                 print(f'You cannot use {player_name} for your name as someone else is already using it.')
                 continue
 
-            piece = input(f"HumanPlayer {self.player_num} enter your piece: ")
-            piece = piece.replace(" ", "")
+            piece:str = input(f"HumanPlayer {self.player_num} enter your piece: ")
+            piece:str = piece.replace(" ", "")
             if len(piece) == 0:
                 print("Your piece cannot be the empty string or whitespace")
                 continue
@@ -53,8 +53,8 @@ class HumanPlayer(Player):
                 continue
             else:
                 break
-        self.name = player_name
-        self.piece = piece
+        self.name: str = player_name
+        self.piece: str = piece
 
     def play(self, board: Board) -> int:
         col = board.num_columns
