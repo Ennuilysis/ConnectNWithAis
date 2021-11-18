@@ -1,32 +1,39 @@
 import abc
 from ConnectNGame.src.player import Player
 from ConnectNGame.src.board import Board
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 
 class HumanPlayer(Player):
     # creates human player instances
 
-    def __init__(self, player_number: int, players: List[Tuple[str, str, int]], board: Board):
+    def __init__(self, player_number: int, players: List[Tuple[str, str, int]], board: Board, Test: bool = False):
         self.name = None
         self.piece = None
         self.player_num = player_number
-        self.check_name_and_piece(player_number, players, board)
+        self.check_name_and_piece(player_number, players, board, Test)
         return
 
     @staticmethod
-    def create_player(player_num: int, players: List[Tuple[str, str, int]], board: Board) -> Player:
-        globals()["HumanPlayer " + str(player_num)] = HumanPlayer(player_num, players, board)
+    def create_player(player_num: int, players: List[Tuple[str, str, int]], board: Board, Test: bool = False) -> Player:
+        globals()["HumanPlayer " + str(player_num)] = HumanPlayer(player_num, players, board, Test)
         return (globals()["HumanPlayer " + str(player_num)])
 
     @abc.abstractmethod
-    def check_name_and_piece(self, player_num: int, players: List[Tuple[str, str, int]], board: Board) -> None:
+    def check_name_and_piece(self, player_num: int, players: List[Tuple[str, str, int]], board: Board, Test: Union[bool, List[str]] = False) -> None:
         x = [t[0] for t in players]
         x = [t.lower() for t in x]
         y = [t[1] for t in players]
+        if Test == True:
+            self.name = "Test_Human"
+            self.piece = "K"
+            return
         while True:
-            player_name = input(f"HumanPlayer {player_num} enter your name: ")
-            player_name = player_name.replace(" ", "")
+            if Test == False:
+                player_name = input(f"HumanPlayer {player_num} enter your name: ")
+                player_name = player_name.replace(" ", "")
+            else:
+                player_name = Test[0]
             # print(f"Player_name {player_name}")
             player_name_lower = player_name.lower()
             if len(player_name) == 0:
@@ -35,9 +42,11 @@ class HumanPlayer(Player):
             elif player_name_lower in x:
                 print(f'You cannot use {player_name} for your name as someone else is already using it.')
                 continue
-
-            piece:str = input(f"HumanPlayer {self.player_num} enter your piece: ")
-            piece:str = piece.replace(" ", "")
+            if Test == False:
+                piece: str = input(f"HumanPlayer {self.player_num} enter your piece: ")
+                piece: str = piece.strip()
+            else:
+                piece = Test[1]
             if len(piece) == 0:
                 print("Your piece cannot be the empty string or whitespace")
                 continue
@@ -53,15 +62,17 @@ class HumanPlayer(Player):
                 continue
             else:
                 break
-        self.name: str = player_name
-        self.piece: str = piece
+            self.name: str = player_name
+            self.piece: str = piece
 
-    def play(self, board: Board) -> int:
+    def play(self, board: Board,Test:bool=False) -> int:
         col = board.num_columns
-
         while True:
             try:
-                pos1 = input(f"{self.name}, please enter the column you want to play in: ")
+                if Test==False:
+                    pos1 = input(f"{self.name}, please enter the column you want to play in: ")
+                else:
+                    pos1=Test
                 pos = int(pos1)
             except:
                 print(f'{self.name}, column needs to be an integer. {pos1} is not an integer. ')  # type: ignore
@@ -75,3 +86,4 @@ class HumanPlayer(Player):
                 continue
             break
         return pos
+
